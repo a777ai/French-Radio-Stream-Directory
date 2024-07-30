@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="https://www.frenchradiostream.com/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>French Radio Stream</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2c3e50;
+      --background-color: #ecf0f1;
+      --text-color: #34495e;
+      --accent-color: #e74c3c;
+      --card-background: #ffffff;
+      --switch-bg: #34495e;
+      --switch-circle: #ecf0f1;
+    }
+
+    body.dark-mode {
+      --primary-color: #2980b9;
+      --secondary-color: #34495e;
+      --background-color: #1a1a1a;
+      --text-color: #ecf0f1;
+      --accent-color: #c0392b;
+      --card-background: #2c3e50;
+      --switch-bg: #ecf0f1;
+      --switch-circle: #34495e;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 30px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5em;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle {
+      font-size: 1em;
+      margin-top: 10px;
+      font-weight: 300;
+      position: relative;
+      z-index: 1;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    #search-input {
+      width: 250px;
+      padding: 8px;
+      font-size: 0.9em;
+      border: none;
+      border-radius: 5px 0 0 5px;
+    }
+
+    #search-button {
+      padding: 8px 16px;
+      font-size: 0.9em;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #search-button:hover {
+      background-color: #c0392b;
+    }
+
+    .radio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .radio-station {
+      background-color: var(--card-background);
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      font-size: 0.8em;
+      max-width: 150px;
+    }
+
+    .radio-logo {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 10px;
+      background-color: var(--primary-color);
+      border-radius: 20%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5em;
+      color: white;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .radio-logo::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+      animation: pulse 3s ease-out infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: scale(1.2); opacity: 0; }
+    }
+
+    .station-name {
+      font-size: 1.2em;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    .play-button {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9em;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .play-button:hover {
+      background-color: #c0392b;
+      transform: scale(1.05);
+    }
+
+    #audio-player {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--secondary-color);
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+    }
+
+    #audio-player audio {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    #now-playing {
+      color: white;
+      font-size: 1em;
+      margin-bottom: 10px;
+    }
+
+    .theme-switch-wrapper {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 100;
+    }
+
+    .theme-switch {
+      display: inline-block;
+      height: 30px;
+      position: relative;
+      width: 50px;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .slider {
+      background-color: var(--switch-bg);
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: .4s;
+      border-radius: 30px;
+    }
+
+    .slider:before {
+      background-color: var(--switch-circle);
+      bottom: 2px;
+      content: "";
+      height: 26px;
+      left: 2px;
+      position: absolute;
+      transition: .4s;
+      width: 26px;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    .slider-icon {
+      color: var(--text-color);
+      font-size: 1em;
+      margin-left: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .radio-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .subtitle {
+        font-size: 0.9em;
+      }
+
+      .theme-switch-wrapper {
+        top: 10px;
+        right: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider"></div>
+      </label>
+      <span class="slider-icon">🌓</span>
+    </div>
+    <h1>French Radio Stream Directory</h1>
+    <p class="subtitle">Découvrez le meilleur de la radio française</p>
+  </header>
+  
+  <div class="container">
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Rechercher une station...">
+      <button id="search-button">Rechercher</button>
+    </div>
+    
+    <div class="radio-grid" id="radio-stations">
+      <!-- Stations will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <div id="audio-player">
+    <div id="now-playing">Aucune station en cours</div>
+    <audio id="audio" controls>
+      <source id="audio-source" src="" type="audio/mp3">
+      Votre navigateur ne supporte pas l'élément audio.
+    </audio>
+  </div>
+
+  <script>
+    const darkModeToggle = document.getElementById('checkbox');
+    const body = document.body;
+
+    darkModeToggle.addEventListener('change', () => {
+      body.classList.toggle('dark-mode');
+    });
+
+    // Radio stations data
+    const radioStations = [
+      { name: "France Inter", stream: "https://icecast.radiofrance.fr/franceinter-midfi.mp3" },
+      { name: "RTL", stream: "https://icecast.rtl.fr/rtl-1-44-128" },
+      { name: "Europe 1", stream: "http://europe1.lmn.fm/europe1.mp3" },
+      { name: "RMC", stream: "https://audio.bfmtv.com/rmcradio_128.mp3" },
+      { name: "France Culture", stream: "https://icecast.radiofrance.fr/franceculture-midfi.mp3" },
+      { name: "FIP", stream: "https://icecast.radiofrance.fr/fip-midfi.mp3" },
+      { name: "NRJ", stream: "https://scdn.nrjaudio.fm/audio1/fr/30001/mp3_128.mp3" },
+      { name: "Nostalgie", stream: "https://scdn.nrjaudio.fm/audio1/fr/30601/mp3_128.mp3" },
+      { name: "Radio Classique", stream: "https://radioclassique.ice.infomaniak.ch/radioclassique-high.mp3" },
+      { name: "France Musique", stream: "https://icecast.radiofrance.fr/francemusique-midfi.mp3" },
+      { name: "Jazz Radio", stream: "https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3" },
+      { name: "TSF Jazz", stream: "https://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3" },
+      { name: "Skyrock", stream: "http://www.skyrock.fm/stream.php/tunein16_128mp3.mp3" }
+    ];
+
+    function displayStations(stations) {
+      const grid = document.getElementById('radio-stations');
+      grid.innerHTML = '';
+      stations.forEach(station => {
+        const stationDiv = document.createElement('div');
+        stationDiv.className = 'radio-station';
+        stationDiv.innerHTML = `
+          <div class="radio-logo">${station.name.charAt(0)}</div>
+          <div class="station-name">${station.name}</div>
+          <button class="play-button" data-stream="${station.stream}">Écouter</button>
+        `;
+        grid.appendChild(stationDiv);
+      });
+    }
+
+    displayStations(radioStations);
+
+    document.getElementById('search-button').addEventListener('click', () => {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const filteredStations = radioStations.filter(station => 
+        station.name.toLowerCase().includes(query)
+      );
+      displayStations(filteredStations);
+    });
+
+    document.getElementById('radio-stations').addEventListener('click', (event) => {
+      if (event.target.classList.contains('play-button')) {
+        const streamUrl = event.target.getAttribute('data-stream');
+        document.getElementById('audio-source').src = streamUrl;
+        document.getElementById('audio').load();
+        document.getElementById('audio').play();
+        document.getElementById('now-playing').textContent = `En train d'écouter : ${event.target.previousElementSibling.textContent}`;
+      }
+    });
+  </script>
+</body>
+</html>
